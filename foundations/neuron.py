@@ -3,35 +3,18 @@ from numpy.typing import NDArray
 
 
 class Solution:
-    def get_derivative(self, model_prediction: NDArray[np.float64], ground_truth: NDArray[np.float64], N: int, X: NDArray[np.float64], desired_weight: int) -> float:
-        # note that N is just len(X)
-        return -2 * np.dot(ground_truth - model_prediction, X[:, desired_weight]) / N
-
-    def get_model_prediction(self, X: NDArray[np.float64], weights: NDArray[np.float64]) -> NDArray[np.float64]:
-        return np.squeeze(np.matmul(X, weights))
-
-    learning_rate = 0.01
-
-    def train_model(
-        self,
-        X: NDArray[np.float64],
-        Y: NDArray[np.float64],
-        num_iterations: int,
-        initial_weights: NDArray[np.float64]
-    ) -> NDArray[np.float64]:
-        # For each iteration:
-        #   1. Compute predictions with get_model_prediction(X, weights)
-        #   2. For each weight index j, compute gradient with get_derivative()
-        #   3. Update: weights[j] -= learning_rate * gradient
-        # Return np.round(final_weights, 5)
-        weights = np.array(initial_weights, dtype=np.float64)
-        for i in range(num_iterations):
-            Y_hat = self.get_model_prediction(X, weights)
-            gradient = np.zeros(len(weights), dtype=np.float64)
-            for j in range(len(weights)):
-                gradient[j] = self.get_derivative(Y_hat, Y, len(X), X, j)
-            weights -= self.learning_rate * gradient
-
-        return np.round(weights, 5)
-
+    def forward(self, x: NDArray[np.float64], w: NDArray[np.float64], b: float, activation: str) -> float:
+        # x: 1D input array
+        # w: 1D weight array (same length as x)
+        # b: scalar bias
+        # activation: "sigmoid" or "relu"
+        #
+        # Pre-activation: z = dot(x, w) + b
+        # Sigmoid: σ(z) = 1 / (1 + exp(-z))
+        # ReLU: max(0, z)
+        # return round(your_answer, 5)
+        z = np.dot(x,w) + b
+        if activation == 'sigmoid':
+            return round(1 / ( 1 + math.exp(-z)), 5)
+        else: return round(max(0.0,z), 5)
         pass
